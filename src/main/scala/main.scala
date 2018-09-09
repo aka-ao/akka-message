@@ -10,10 +10,17 @@ import scala.concurrent.duration._
   */
 object main extends App {
   import MyActor._
+  implicit lazy val timeout = Timeout(10 seconds)
   val system = ActorSystem("myActor")
+  import system.dispatcher
 
   val myActor = system.actorOf(MyActor.props)
   myActor ! TellMessage()
+
+  (myActor ? AskMessageReq()).mapTo[AskMessageRes].map {
+    case msg: AskMessageRes =>
+      println(s"receive ${msg.getClass.getName}")
+  }
 
   Await.result(system.whenTerminated, Duration.Inf)
 }
