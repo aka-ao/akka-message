@@ -22,5 +22,20 @@ object main extends App {
       println(s"receive ${msg.getClass.getName}")
   }
 
+  (myActor ? GetStatus).mapTo[Status].map {
+    case First => println("getStatus: First")
+    case Second => println("getStatus: Second")
+  }
+
+  (myActor ? ChangeStatus).mapTo[Status].map {
+    case First => println("changeStatus: First")
+    case Second => println("changeStatus: Second")
+  }
+
+  (myActor ? GetStatus).mapTo[Status].map {
+    case First => println("getStatus: First")
+    case Second => println("getStatus: Second")
+  }
+
   Await.result(system.whenTerminated, Duration.Inf)
 }
